@@ -1,0 +1,2111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: ".SFNSText-Regular", "BlinkMacSystemFont", "Helvetica Neue",
+    "Segoe UI", "Arial", sans-serif;
+}
+/* TODO figure out why the default focus color in Electron is orange */
+*:focus {
+  outline-color: rgb(0, 117, 255);
+}
+.dark-mode *:focus {
+  outline-color: transparent;
+}
+body.mac * {
+  letter-spacing: 0.4px;
+}
+[hidden] {
+  display: none !important;
+}
+
+/* buttons are styled like normal text by default */
+button {
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  color: inherit;
+  outline: none;
+}
+body,
+html {
+  background-color: #fff;
+  color: #000;
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+}
+
+body.dark-mode {
+  background-color: rgb(33, 37, 43);
+  color: lightgrey;
+}
+
+h1,
+h2,
+h3 {
+  font-size: 5em;
+  font-weight: 300;
+  opacity: 0.8;
+  margin: 0.5em 0;
+  color: inherit;
+  text-align: center;
+}
+h2 {
+  text-align: left;
+  font-size: 2.75em;
+}
+h3 {
+  text-align: left;
+  font-size: 2em;
+}
+h1 + h2 {
+  margin-top: -1em;
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.spacer {
+  height: 1em;
+}
+
+.light-fade {
+  opacity: 0.666;
+}
+
+a {
+  color: royalblue;
+  text-decoration: none;
+}
+
+.dark-mode a {
+  color: dodgerblue;
+}
+
+.dark-mode input,
+.dark-mode textarea {
+  background-color: rgb(52, 58, 68);
+  color: white;
+  border-color: transparent;
+}
+
+/* styled scrollbars */
+
+.has-thin-scrollbar::-webkit-scrollbar {
+  height: 0.25em;
+}
+.has-thin-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.has-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.175);
+  border-radius: 0.25em;
+}
+.dark-theme .has-thin-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.dark-theme .has-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+body {
+  --control-space-top: 0px;
+  --control-space-left: 0.3em;
+  --control-space-right: 0.3em;
+}
+/* window drag regions */
+
+.window-drag-area {
+  display: none;
+}
+
+body.windows:not(.maximized):not(.fullscreen):not(.separate-titlebar),
+body.linux:not(.maximized):not(.fullscreen):not(.separate-titlebar) {
+  --control-space-top: 12px;
+}
+
+/* On Windows, draggable regions aren't clickable, so the drag region is a separate area above the tabstrip */
+body.windows:not(.maximized):not(.fullscreen):not(.separate-titlebar) .window-drag-area,
+body.linux:not(.maximized):not(.fullscreen):not(.separate-titlebar) .window-drag-area {
+  display: block;
+  position: fixed;
+  /* leave an empty space around the edges of the drag area so that the window can be resized */
+  top: 3px;
+  left: 3px;
+  width: calc(100% - 6px);
+  height: 12px;
+  -webkit-app-region: drag;
+}
+
+body.mac:not(.separate-titlebar):not(.fullscreen) .window-drag-area {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  -webkit-app-region: drag;
+}
+
+body.mac:not(.is-edit-mode):not(.fullscreen):not(.separate-titlebar) #mac-window-drag-area {
+  margin-left: calc(var(--control-space-left) * -1);
+  width: calc(var(--control-space-left) + 1.25em);
+  height: 100%;
+  -webkit-app-region: drag;
+}
+
+/* mac window buttons */
+
+body.mac:not(.fullscreen):not(.separate-titlebar) {
+  --control-space-left: 75px;
+}
+
+body.rtl.mac:not(.fullscreen):not(.separate-titlebar) {
+  --control-space-left: 0px;
+  --control-space-right: 75px;
+}
+
+/* Windows caption buttions */
+
+body.windows:not(.separate-titlebar) {
+  --control-space-right: 138px;
+}
+
+.windows-caption-buttons {
+  display: none;
+}
+
+body.windows:not(.separate-titlebar) .windows-caption-buttons {
+  display: flex;
+  position: absolute;
+  top: var(--control-space-top);
+  right: 0;
+  z-index: 10;
+}
+
+.windows-caption-buttons .element {
+  line-height: 36px;
+  width: 36px;
+  stroke: #000;
+  padding: 0 5px;
+  box-sizing: content-box;
+  fill: transparent;
+  text-align: center;
+}
+
+body:not(.task-overlay-is-shown).dark-theme .windows-caption-buttons .element {
+  stroke: #fff;
+}
+
+.windows-caption-buttons .element > svg {
+  width: 12px;
+  height: 12px;
+}
+
+.windows-caption-buttons .element {
+  transition: background-color 0.1s linear, color 0.1s linear;
+}
+.windows-caption-buttons .element:hover {
+  background-color: rgba(196, 196, 196, 0.4);
+  transition: none;
+}
+.windows-caption-buttons .element:active {
+  background-color: rgba(168, 168, 168, 0.5);
+}
+.windows-caption-buttons .element.caption-close:hover {
+  background-color: #e81123;
+}
+.windows-caption-buttons .element.caption-close:hover > svg,
+.windows-caption-buttons .element.caption-close:active > svg {
+  stroke: #fff;
+  stroke-width: 1.1px;
+}
+.windows-caption-buttons .element.caption-close:active {
+  background-color: rgba(232, 17, 35, 0.6);
+}
+
+/* Linux buttons */
+
+#linux-control-buttons {
+  display: none;
+}
+
+body.linux:not(.separate-titlebar) {
+  --control-space-right: 96px;
+}
+
+body.linux:not(.separate-titlebar) #linux-control-buttons {
+  display: block;
+  position: absolute;
+  top: calc(9px + var(--control-space-top));
+  right: 9px;
+  z-index: 9;
+  width: 76px;
+}
+
+body.task-overlay-is-shown #linux-control-buttons {
+  color: black !important;
+}
+
+body.dark-mode.task-overlay-is-shown #linux-control-buttons {
+  color: white !important;
+}
+
+#linux-control-buttons .button-background {
+  fill: currentColor;
+  stroke: currentColor;
+  fill-opacity: 0;
+  stroke-opacity: 0;
+}
+
+#linux-control-buttons g:hover .button-background {
+  fill-opacity: 0.02;
+  stroke-opacity: 0.09;
+}
+
+#linux-control-buttons g:active .button-background {
+  fill-opacity: 0.18;
+  stroke-opacity: 0.24;
+}
+
+.dark-theme #linux-control-buttons g:hover .button-background {
+  fill-opacity: 0.2;
+  stroke-opacity: 0.35;
+}
+
+.dark-theme #linux-control-buttons g:active .button-background {
+  fill-opacity: 0.45;
+  stroke-opacity: 0.7;
+}
+
+#overlay {
+  display: none;
+}
+
+/* show the overlay when the searchbar is open or a dialog is visible */
+body.is-edit-mode #overlay,
+body.is-modal-mode #overlay {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+body.is-edit-mode.is-ntp.ntp-has-background #overlay {
+  opacity: 0.33;
+}
+
+body.is-modal-mode #overlay {
+  /* In modal mode, the tab bar should be disabled */
+  z-index: 5;
+  pointer-events: all;
+}
+body.dark-mode #overlay {
+  background: rgba(33, 37, 43, 0.4);
+}
+
+.modal {
+  width: 100vw;
+  max-width: 700px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 9;
+  transform: translate(-50%, -50%);
+  padding: 1em 1.25em;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  background: #fff;
+  animation: modal-appear 0.2s;
+}
+
+@keyframes modal-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.dark-mode .modal {
+  background-color: rgb(33, 37, 43);
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 0.66em;
+  right: 0.66em;
+  font-size: 1.66em !important;
+  opacity: 0.75;
+  border-radius: 50%;
+  padding: 0.05em;
+}
+
+.modal-close-button:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.075);
+}
+
+.dark-mode .modal-close-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.modal-title {
+  font-size: 1.5em;
+  margin-top: 0;
+  margin-bottom: 1em;
+  max-width: 90%;
+}
+
+#navbar {
+  display: flex;
+  height: calc(36px + var(--control-space-top));
+  transition: 0.2s background-color;
+  width: 100%;
+  -webkit-user-select: none;
+  position: relative;
+  outline: none;
+  z-index: 2;
+  padding-top: var(--control-space-top);
+  padding-left: var(--control-space-left);
+  padding-right: var(--control-space-right);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* when the tab-group is white, we need a line to separate it from the webviews */
+
+#navbar:before {
+  content: "";
+  width: 100vw;
+  height: 1px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.075);
+}
+
+/* dark colors don't need to be darkened as much for contrast */
+
+.dark-theme #navbar:before {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* navbar buttons */
+
+#toolbar-navigation-buttons {
+  width: 2rem;
+  transition: 0.1s width;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#toolbar-navigation-buttons.can-go-forward:hover {
+  width: 4rem;
+}
+
+body.is-edit-mode #toolbar-navigation-buttons {
+  display: none;
+}
+
+#back-button,
+#forward-button {
+  opacity: 1;
+  transition: none;
+  padding: 0;
+  width: 2rem;
+}
+#back-button:disabled,
+#forward-button:disabled {
+  opacity: 0.2;
+}
+
+/* Remove default space from being inline-block */
+#forward-button {
+  margin-left: -0.25rem;
+}
+
+#menu-button {
+  width: 36px;
+  padding: 0;
+}
+
+#menu-button {
+  display: none;
+}
+
+body.windows #menu-button,
+body.linux #menu-button {
+  display: inline-block;
+}
+
+/* tab layout */
+
+#navbar #tabs {
+  display: flex;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#tabs #tabs-inner {
+  display: flex;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+#tabs #tabs-inner.disable-scroll {
+  overflow-x: hidden;
+}
+
+.tab-item {
+
+  flex: 1;
+  min-width: 125px;
+  transition: 0.2s transform;
+  line-height: 36px;
+  height: 36px;
+  overflow: hidden;
+  word-break: break-all;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-right: 1px solid rgba(122, 122, 122, 0.635);
+}
+
+.tab-item.active {
+  min-width: 168px;
+}
+.tab-item.gu-mirror {
+  top: var(--control-space-top) !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  margin-top: 2px !important;
+  opacity: 1;
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);
+  background-color: #fff !important;
+  color: var(--theme-foreground-color);
+  border-radius: 3px;
+}
+.tab-item.gu-mirror:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  content: '';
+  background-color: var(--theme-background-color);
+  opacity: 0.7;
+}
+.dark-mode .tab-item.gu-mirror {
+  background: rgb(84, 91, 100) !important;
+  color: white !important;
+}
+.tab-item.gu-transit {
+  opacity: 0 !important;
+}
+.tab-item.gu-mirror .tab-icon-area {
+  display: none;
+}
+
+#navbar.show-dividers .tab-item:not(:last-child) {
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+}
+.dark-theme #navbar.show-dividers .tab-item:not(:last-child) {
+  border-right-color: rgba(255, 255, 255, 0.4);
+}
+
+#navbar.show-dividers:before {
+  background: rgba(182, 182, 182, 0.5);
+}
+
+.tab-item:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.dark-theme .tab-item:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.dark-theme.theme-background-low-contrast .tab-item:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* icons */
+
+.tab-item .tab-icon-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  order: 1;
+  margin-right: auto;
+}
+body:not(.touch)
+  .tab-item:not(:hover)
+  .tab-icon-area:has(.tab-close-button:only-child) {
+  margin-left: -0.5rem;
+}
+
+.tab-item .tab-icon {
+  position: relative;
+  font-size: 0.875em;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.tab-item .tab-icon:not(.permission-request-icon):hover:after {
+  content: "";
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.075);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+.dark-theme .tab-item .tab-icon:hover:after {
+  background: rgba(255, 255, 255, 0.15);
+}
+.tab-item.active:not(:only-child) {
+  background: rgba(0, 0, 0, 0.06);
+}
+.dark-theme .tab-item.active:not(:only-child) {
+  background: rgba(255, 255, 255, 0.2);
+}
+.dark-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
+  background: rgba(255, 255, 255, 0.25);
+}
+.tab-item.fade {
+  opacity: 0.55;
+}
+.tab-item.fade:hover {
+  opacity: 1;
+}
+
+.is-edit-mode #navbar #tabs-inner::-webkit-scrollbar {
+  height: 0;
+}
+
+/* hide tabs when tab editor is open */
+
+.is-edit-mode .tab-item {
+  opacity: 0;
+}
+
+/* hide the lock icon unless its the current tab */
+
+.tab-item:not(.active) .icon-tab-not-secure {
+  display: none;
+}
+.tab-item .title-container {
+  display: inline-block;
+  position: relative;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  flex: 1;
+  overflow: hidden;
+}
+.compact-tabs .tab-item .title {
+  font-size: 14px;
+}
+.tab-item .title {
+  display: block;
+  position: absolute;
+  top: 0;
+  font-size: 15px;
+  transform-origin: left 10%;
+  transition: 0.15s transform;
+  white-space: nowrap;
+}
+.tab-item .url-element {
+  display: block;
+  position: absolute;
+  top: 5px;
+  transform-origin: left 90%;
+  transform: translateY(15%);
+  opacity: 0;
+  transition: 0.15s all;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tab-item.active.has-url:hover .url-element {
+  transform: none;
+  opacity: 1;
+}
+.tab-item.active.has-url:hover .title {
+  transform: scale(0.7333) translateY(-10%);
+  opacity: 0.9;
+}
+.compact-tabs .tab-item.active.has-url:hover .title {
+  transform: scale(0.78571) translateY(-12%);
+}
+
+/* buttons */
+
+.navbar-action-button {
+  padding: 0 1rem;
+  height: 36px;
+  margin-top: -0.5px;
+  font-size: 1.4em !important;
+}
+body.windows .navbar-action-button:not(:disabled):hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.075);
+}
+.navbar-action-button.invisible {
+  visibility: hidden;
+}
+.navbar-action-button + .navbar-action-button {
+  padding-left: 0.5em;
+}
+.navbar-right-actions {
+  margin-right: 2.3em;
+}
+
+.navbar-right-actions #add-tab-button {
+  padding: 0;
+  width: 36px;
+  font-size: 1.6em !important;
+}
+
+/* audio button */
+.tab-item .tab-audio-button {
+  vertical-align: text-bottom;
+  padding: 0;
+  font-size: 1.1em !important;
+}
+
+/* reader button */
+
+.tab-item .reader-button {
+  display: none;
+  vertical-align: text-bottom;
+  font-size: 1.1em !important;
+  order: -1;
+}
+.tab-item.active .reader-button.can-reader {
+  display: inline-flex;
+}
+.tab-item.active .reader-button.is-reader {
+  display: inline-flex;
+}
+
+/* permission request buttons */
+
+.tab-item .tab-icon.permission-request-icon {
+  border: 1px rgba(0, 0, 0, 0.3) solid;
+  border-radius: 0.75rem;
+  height: 70%;
+  margin: auto 0;
+  order: -1;
+  padding-inline: 0.25rem;
+}
+.tab-item .tab-icon.permission-request-icon .i {
+  vertical-align: middle;
+  display: inline-block;
+}
+.dark-theme .tab-item .tab-icon.permission-request-icon {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.tab-item .tab-icon.permission-request-icon:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+.dark-theme .tab-item .tab-icon.permission-request-icon:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.tab-item .tab-icon.permission-request-icon.active {
+  background-color: rgba(0, 0, 0, 0.66);
+  border-color: transparent;
+  color: white;
+}
+.dark-theme .tab-item .tab-icon.permission-request-icon.active {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: transparent;
+  color: black;
+}
+
+.tab-item:not(.active) .permission-request-icon:not(.active) {
+  display: none;
+}
+
+/* in Carbon, close icon is a bit smaller than other icons, enlarge it in order to match with other icons */
+.tab-item .tab-close-button {
+  font-size: 1.25em;
+  box-sizing: border-box;
+  order: 1;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* when the tab is hovered, hide info buttons and show the close button */
+
+body:not(.touch) .tab-item .tab-close-button {
+  display: inline-block;
+}
+
+body.is-focus-mode .navbar-action-button:not(#menu-button) {
+  display: none;
+}
+
+/* progress bar */
+
+.progress-bar-container {
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* margin: 0 0.8em; */
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 2px;
+  width: 100%;
+  background-color: currentColor;
+}
+
+body:not(.dark-theme) .progress-bar {
+  opacity: 0.8;
+}
+
+.p0 {
+  transform: translateX(-100%);
+}
+
+.p25 {
+  transform: translateX(-75%);
+  transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.p100 {
+  transform: translateX(0%);
+  transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#tab-editor {
+  padding: 0 0.55em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  transform-origin: top left;
+  z-index: 1;
+}
+
+#tab-editor-input {
+  font-size: 1.1em;
+  line-height: 2em;
+  background: none;
+  -webkit-appearance: none;
+  border: none;
+  color: inherit;
+  flex: 1;
+  height: 1.5em;
+  outline: none;
+  -webkit-user-select: auto;
+  -webkit-app-region: no-drag;
+}
+#tab-editor-input::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.5;
+  line-height: 1.25em;
+}
+
+#tab-editor .tab-editor-button {
+  padding: 0.4em;
+  margin-top: 0.1em;
+  border-radius: 50%;
+}
+
+#tab-editor .tab-editor-button:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+.dark-theme #tab-editor .tab-editor-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+#tab-editor
+  .tab-editor-button:not([hidden])
+  + .tab-editor-button:not([hidden]) {
+  margin-left: 0.25em;
+}
+
+.simulated-navbar {
+  width: 100%;
+  height: calc(36px + var(--control-space-top));
+  background-color: inherit;
+  z-index: 1;
+  border-bottom: 1px rgba(0, 0, 0, 0.1) solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dark-mode .simulated-navbar {
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+}
+
+.task-search-input-container {
+  width: 450px;
+  max-width: 60vw;
+  position: relative;
+  padding: 0.25em 3em;
+}
+.task-search-input-container i {
+  position: absolute;
+  top: 0.55em;
+  left: 3.33em;
+}
+.task-search-input-container input {
+  width: 100%;
+  border: none;
+  background: rgba(0, 0, 0, 0.075);
+  padding: 0.2em 0.25em 0.2em 1.75em;
+  border-radius: 4px;
+}
+
+.dark-mode .task-search-input-container input {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media all and (max-width: 600px) {
+  .task-search-input-container {
+    max-width: 350px;
+    margin-left: var(--control-space-left);
+    margin-right: calc(var(--control-space-right) + 40px);
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+  .task-search-input-container i {
+    left: 1.33em;
+  }
+}
+
+#switch-task-button {
+  position: absolute;
+  top: var(--control-space-top);
+  right: var(--control-space-right);
+  z-index: 4;
+  padding: 0.5em;
+}
+
+#switch-task-button.active {
+  color: royalblue !important;
+}
+
+#switch-task-button svg {
+  width: 0.8em;
+  height: 0.8em;
+  display: block;
+  margin-top: 2px;
+}
+#task-overlay {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  white-space: nowrap;
+  overflow: auto;
+  opacity: 1;
+  transform: none;
+  transition: 0.15s all;
+  z-index: 3;
+}
+#task-area {
+  flex: 1;
+  overflow: auto;
+  padding-bottom: 1.5em;
+}
+#task-overlay[hidden] {
+  display: block !important;
+  transform: scale(1.05);
+  opacity: 0;
+  pointer-events: none;
+}
+.task-container {
+  width: 90%;
+  margin: auto;
+  border-left: 5vw solid transparent;
+  border-right: 5vw solid transparent;
+  transition: 0.5s opacity;
+}
+.task-container.collapsed {
+  opacity: 0.8;
+  cursor: pointer;
+}
+.task-container.collapsed input {
+  cursor: pointer;
+}
+.task-container:not([hidden]) + .task-container {
+  padding-top: 0.75em;
+}
+
+.task-container.collapsed .task-tabs-container {
+  display: none;
+}
+
+.task-tab-item .icon-image {
+  opacity: 0.75 !important;
+}
+.dark-mode .task-tab-item .icon-image {
+  opacity: 0.9 !important;
+}
+
+.dark-mode .task-tab-item.has-dark-favicon .icon-image {
+  box-sizing: content-box;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px transparent solid;
+  margin: -2px;
+}
+
+/* task buttons */
+
+.task-collapse-button {
+  font-size: 1.25em !important;
+  width: 1.5em;
+  text-align: center;
+  margin-left: -1.5em;
+  padding: 0.5em 0;
+  margin-top: 0.1rem;
+  transition: 0.2s opacity;
+  opacity: 0.7;
+}
+
+body:not(.touch)
+  .task-container:not(.collapsed):not(:hover)
+  .task-collapse-button:not(:focus) {
+  opacity: 0;
+}
+
+.task-container.selected .task-collapse-button {
+  display: none;
+}
+
+.task-delete-button {
+  margin: auto -0.5em;
+  border-radius: 50%;
+  height: 2em;
+  width: 2em;
+  transition: 0.1s opacity;
+  opacity: 0.75;
+  font-size: 1.2em !important;
+}
+
+.task-container.collapsed:not(:hover) .task-delete-button:not(:focus) {
+  opacity: 0;
+}
+
+.task-action-container button:hover,
+.task-action-container button:focus {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.125);
+}
+.dark-mode .task-action-container button:hover,
+.dark-mode .task-action-container button:focus {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.task-container .task-delete-warning {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1em;
+  text-align: center;
+}
+
+.dark-mode .task-container .task-delete-warning {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.task-container:not(.deleting) .task-delete-warning {
+  display: none;
+}
+
+.task-container.deleting > *:not(.task-delete-warning) {
+  display: none;
+}
+
+/* inputs */
+
+.task-name {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  font-size: 1.2em;
+  color: inherit;
+  border: 0;
+  background-color: transparent !important;
+  opacity: 0.75;
+  margin: 0.5em 0.75em 0.5em 0.5em;
+}
+.task-name::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.8;
+}
+#add-task {
+  width: 80%;
+  margin-left: 10%;
+  padding: 1.25em;
+  text-align: center;
+  color: inherit;
+  background-color: rgb(245, 245, 245);
+  cursor: pointer;
+}
+/* hide tab element that is being dropped */
+#add-task .task-tab-item {
+  display: none;
+}
+.is-dragging-tab #add-task {
+  background: none;
+  border: 2px dashed rgba(0, 0, 0, 0.3);
+  border-bottom-width: 0;
+  border-radius: 3px;
+}
+.is-dragging-tab #add-task.drag-target {
+  border: none;
+  margin-bottom: 0;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode #add-task {
+  background-color: rgb(33, 37, 43);
+  color: lightgrey;
+}
+.dark-mode .is-dragging-tab #add-task {
+  background: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.dark-mode .is-dragging-tab #add-task.drag-target {
+  background: rgba(255, 255, 255, 0.15);
+}
+#add-task:hover {
+  background-color: rgb(235, 235, 235);
+}
+.dark-mode #add-task:hover {
+  background-color: rgb(44, 49, 56);
+}
+#add-task .i {
+  opacity: 0.75;
+  vertical-align: middle;
+  margin-right: 0.25em;
+}
+.task-action-container {
+  display: flex;
+  align-items: center;
+  padding-right: 1em;
+}
+.task-info-container {
+  padding: 0 0.6em;
+  overflow: hidden;
+}
+.task-info-container span {
+  font-size: 0.9em;
+  opacity: 0.6;
+  margin: -0.25em 0 0.25em 0;
+}
+.task-info-container span + span:before {
+  content: " - ";
+}
+
+.task-container:not(.collapsed) .task-info-container .task-last-tab-title {
+  display: none;
+}
+
+.task-container:not(.collapsed) .task-info-container .task-favicons {
+  display: none;
+}
+.task-favicons {
+  opacity: 0.8 !important;
+}
+.task-favicons img {
+  width: 1em;
+  height: 1em;
+  margin: 0 0.25em;
+  vertical-align: bottom;
+}
+.dark-mode .task-favicons .dark-favicon {
+  box-sizing: content-box;
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px transparent solid;
+  margin: -2px calc(0.25em - 2px) -2px calc(0.25em - 2px);
+}
+
+body.dark-mode #task-overlay {
+  background-color: rgb(40, 44, 52) !important;
+  color: lightgrey;
+}
+
+.dark-mode #switch-task-button {
+  color: dodgerblue;
+}
+
+.tab-drop-placeholder, .task-drop-placeholder {
+  opacity: 0.25;
+}
+
+.task-container.sortable-chosen {
+  background: white;
+}
+.dark-mode .task-container.sortable-chosen {
+  background: rgb(40, 44, 52);
+}
+
+.task-tab-item.dragging-selected {
+  border-left: 3px solid cornflowerblue;
+  margin-left: -3px;
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+.dark-mode .task-tab-item.dragging-selected {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+#webviews {
+  height: calc(100vh - 36px - var(--control-space-top));
+  position: relative;
+}
+
+.arrow-indicator {
+  width: 140px;
+  height: 140px;
+  border-radius: 70px;
+  background: #000;
+  position: fixed;
+  top: 50%;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+}
+/* use a separate class to avoid an issue where the arrow sometimes appears briefly on startup beginning in Chromium 61 */
+.arrow-indicator.animating {
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.arrow-indicator.shown {
+  opacity: 0.6;
+  visibility: visible;
+}
+#leftArrowContainer {
+  left: -70px;
+}
+#rightArrowContainer {
+  right: -70px;
+}
+
+.arrow {
+  color: white;
+  font-size: 40px !important;
+  margin-top: 50px;
+}
+#leftArrow {
+  float: right;
+  margin-right: 15px;
+}
+#rightArrow {
+  float: left;
+  margin-left: 15px;
+}
+
+#webview-placeholder {
+  width: 100%;
+  height: 100%;
+  /* the built-in blur() function creates white edges around the image, avoid this by using an SVG filter. Source:
+	https://codepen.io/tigt/post/fixing-the-white-glow-in-the-css-blur-filter#comment-id-6373
+	https://jsbin.com/kupaqa/edit?html,css,output
+	*/
+  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='6' /%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='1 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E %3C/svg%3E#a");
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#ntp-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    opacity: 1;
+    transition: 0.15s opacity;
+    overflow: hidden;
+}
+
+body:not(.is-ntp) #ntp-content {
+    opacity: 0;
+}
+
+#ntp-background {
+    /*max-height: max(100%, 72vw);*/
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    object-fit: cover;
+}
+
+#ntp-background-controls {
+    position: absolute;
+    bottom: 1em;
+    right: 1.25em;
+}
+
+#ntp-background-controls button {
+    background: white;
+    border: 1px #aaa solid;
+    color: #444;
+    font-size: 1.15em;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    border-radius: 50%;
+    opacity: 0.7;
+    transition: 0.15s;
+}
+
+.dark-mode #ntp-background-controls button {
+    background: rgb(33, 37, 43);
+    border-color: #aaa;
+    color: white;
+}
+
+#ntp-background-controls:hover button {
+    opacity: 0.9;
+    box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.25);
+}
+
+#ntp-background-controls:hover #ntp-image-remove {
+    color: rgb(248, 73, 73) !important;
+}
+
+#ntp-background-controls:not(:hover) #ntp-image-remove {
+    opacity: 0;
+}
+#searchbar {
+  z-index: 3;
+  position: fixed;
+  top: calc(var(--control-space-top) + 36px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  color: #000;
+  padding-left: var(--control-space-left);
+  padding-right: calc(82px + var(--control-space-right));
+  -webkit-user-select: none;
+  max-height: calc(100% - 125px);
+  overflow-y: auto;
+}
+
+body:not(.is-ntp) #searchbar,
+body.ntp-has-background #searchbar {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 3px 4px -2px;
+}
+
+/* account for menu button */
+body.windows #searchbar,
+body.linux #searchbar {
+  padding-left: calc(36px + var(--control-space-left));
+}
+
+.searchbar-plugin-container {
+  position: relative;
+}
+
+.searchbar-heading {
+  font-weight: normal;
+  padding: 0.9em 0.55em 0.33em 0.55em;
+  opacity: 0.7;
+  cursor: default;
+}
+
+.searchbar-floating-button {
+  position: absolute;
+  right: 0;
+  top: 0.5em;
+  border: 1px #ccc solid;
+  padding: 0.33em 0.5em;
+  border-radius: 3px;
+  opacity: 0.66;
+  z-index: 9;
+}
+
+.searchbar-floating-button:hover {
+  background-color: rgba(0, 0, 0, 0.05)
+}
+
+.dark-theme .searchbar-floating-button {
+  border-color: white;
+}
+.dark-theme .searchbar-floating-button:hover {
+  background-color: rgba(255, 255, 255, 0.075)
+}
+
+/* move the icon when there isn't room to the left of the searchbar */
+
+.fullscreen #searchbar .searchbar-item i,
+body:not(.mac) #searchbar .searchbar-item i,
+.fullscreen #searchbar .searchbar-item .icon-image,
+body:not(.mac) #searchbar .searchbar-item .icon-image {
+  left: auto;
+  right: 1.1em;
+}
+
+/* if an action button is visible, the searchbar icon should disappear (if they occupy the same position) */
+
+.fullscreen #searchbar .searchbar-item.has-action-button:hover i,
+body:not(.mac) #searchbar .searchbar-item.has-action-button:hover i,
+.fullscreen #searchbar .searchbar-item.has-action-button:hover .icon-image,
+body:not(.mac) #searchbar .searchbar-item.has-action-button:hover .icon-image {
+  display: none;
+}
+
+#searchbar .image.color-circle {
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  float: left;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding-right: 0.5em;
+}
+.dark-theme #searchbar .image.color-circle {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-feedback-link {
+  display: block;
+  width: 100%;
+  font-size: 0.8em;
+  opacity: 0.75;
+  text-decoration: underline;
+  padding: 0.5em 0.6875em 0.5em 0.6875em;
+}
+
+.search-feedback-link:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.searchbar-shortcut {
+  font-size: 1.05em !important;
+  padding: 0.5em 0.66em;
+  margin: 0.175em 0.4em 0.5em 0.4em;
+  border-radius: 5px;
+  border: 1px rgba(0, 0, 0, 0.15) solid;
+}
+.dark-theme .searchbar-shortcut {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.searchbar-shortcut:hover,
+.searchbar-shortcut:focus {
+  background: rgba(0, 0, 0, 0.075);
+}
+
+.dark-theme .searchbar-shortcut:hover,
+.dark-theme .searchbar-shortcut:focus {
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.searchbar-shortcut:active {
+  background: rgba(0, 0, 0, 0.125);
+}
+
+.dark-theme .searchbar-shortcut:active {
+  background: rgba(255, 255, 255, 0.125);
+}
+
+.searchbar-item {
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: 8px 9px 9px 9px;
+  cursor: pointer;
+  transition: 0.2s transform, 0.2s opacity;
+}
+.searchbar-item.placeholder {
+  height: 36px;
+}
+.searchbar-item:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+.searchbar-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+.searchbar-item:focus,
+.searchbar-item.fakefocus {
+  background-color: rgba(0, 0, 0, 0.08);
+  outline: none;
+}
+.dark-theme .theme-background-color .searchbar-item:hover,
+.dark-mode .searchbar-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.dark-theme .theme-background-color .searchbar-item:focus,
+.dark-theme .theme-background-color .searchbar-item.fakefocus,
+.dark-mode .searchbar-item:focus,
+.dark-mode .searchbar-item.fakefocus {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.searchbar-item .title {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 45%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.searchbar-item .title.wide {
+  max-width: 70%;
+}
+
+.searchbar-item i,
+.searchbar-item .icon-image {
+  position: absolute;
+  top: 0.7em;
+  left: -1.4em;
+  opacity: 0.25;
+  font-size: 1em;
+  width: 1em;
+  height: 1em;
+}
+
+.dark-theme .theme-background-color .searchbar-item i {
+  opacity: 0.33;
+}
+
+.searchbar-item .icon-image {
+  opacity: 1;
+}
+
+/* buttons */
+
+.searchbar-item .action-button {
+  position: absolute;
+  width: 1.5em;
+  height: 1.5em;
+  right: 0.45em;
+  top: calc(0.16em + 1px);
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  background: transparent;
+  transition: 0.05s;
+  font-size: 1.2em;
+  color: currentColor;
+}
+/* increase button click area
+:before is already used for icon */
+.searchbar-item .action-button:after {
+  content: "";
+  width: 3em;
+  height: 2.5em;
+  top: -0.25em;
+  left: -0.75em;
+  display: block;
+  position: absolute;
+}
+.searchbar-item:hover .action-button,
+.searchbar-item:focus .action-button,
+.searchbar-item .action-button.always-visible,
+body.touch .searchbar-item .action-button {
+  opacity: 0.6;
+}
+.dark-mode .searchbar-item:hover .action-button,
+.dark-mode .searchbar-item:focus .action-button,
+.searchbar-item .action-button.always-visible,
+body.dark-mode.touch .searchbar-item .action-button {
+  opacity: 0.8;
+}
+.searchbar-item .action-button:hover,
+.searchbar-item .action-button:focus {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+.dark-mode .searchbar-item .action-button:hover,
+.dark-mode .searchbar-item .action-button:focus {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.15);
+}
+.searchbar-item .action-button:active {
+  background: rgba(0, 0, 0, 0.175);
+}
+.dark-mode .searchbar-item .action-button:active {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* secondary text */
+
+.searchbar-item .secondary-text .md-info {
+  float: left;
+  opacity: 0.75;
+  font-size: inherit;
+}
+.searchbar-item .secondary-text .md-info:first-child {
+  padding-left: 0;
+}
+.searchbar-item .secondary-text .md-info:last-of-type {
+  padding-right: 0.5em;
+}
+.searchbar-item .secondary-text .md-info + .md-info:before {
+  content: "-";
+  padding: 0 0.3em;
+}
+.searchbar-item .secondary-text {
+  display: inline-block;
+  opacity: 0.66;
+  font-size: 0.95em;
+  overflow: hidden;
+  vertical-align: middle;
+  padding-left: 1.5em;
+  max-width: 50%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-height: 2em;
+}
+
+.searchbar-item .image {
+  height: 2.75em;
+  margin: 0.25em 0.5em 0.5em 0;
+  float: left;
+}
+.searchbar-item:focus .image {
+  height: 4em;
+}
+
+.searchbar-item .description-block {
+  display: block;
+  line-height: 1.15em;
+  max-height: 2.3em;
+  overflow: hidden;
+  opacity: 0.666;
+  font-size: 0.85em;
+  margin-top: 0.1em;
+  margin-right: 2.5em;
+}
+.searchbar-item .description-block strong {
+  font-size: inherit;
+  font-weight: 500;
+}
+/* when a result is selected, we can show more of the description */
+.searchbar-item:focus .description-block {
+  max-height: none;
+  opacity: 0.8;
+  line-height: 1.2em;
+}
+
+.searchbar-item .attribution {
+  display: none;
+  line-height: 1.15em;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-top: 0.2em;
+}
+.searchbar-item:focus .attribution {
+  display: block;
+}
+
+/* switch to a two-line layout */
+
+@media all and (max-width: 650px) {
+  .searchbar-item .title {
+    max-width: calc(100% - 50px);
+  }
+  .searchbar-item .secondary-text {
+    display: block;
+    max-width: 100%;
+    padding-top: 0.1em;
+    padding-left: 0;
+    /* prevents letters like "g" from being cut off */
+    line-height: 1em;
+  }
+  .searchbar-item .image {
+    display: none;
+  }
+}
+
+#bookmark-tag-bar {
+  margin-top: 0.5em;
+}
+
+#bookmark-tag-bar:not(.expanded) .tag.overflowing {
+  display: none;
+}
+
+.bookmark-editor {
+  background: transparent !important;
+  margin-bottom: 3px;
+}
+.bookmark-editor:not(.simplified) {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+.dark-theme .bookmark-editor:not(.simplified) {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.bookmark-editor .tag-edit-area {
+  display: inline-block;
+}
+
+.bookmark-editor .bookmark-delete-button {
+  top: auto;
+  bottom: calc(0.16em + 1px);
+}
+.bookmark-editor.simplified .bookmark-delete-button {
+  position: static;
+  margin-left: 0.75em;
+  transform: translateY(0.1875em);
+}
+
+.bookmark-editor .bookmark-url {
+  opacity: 0.66;
+  font-size: 0.95em;
+  margin-bottom: 0.55em;
+}
+
+#searchbar .tag {
+  display: inline-block;
+  padding: 0.33em 0.5em;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.075);
+  border: 2px transparent solid;
+  opacity: 0.66;
+}
+.dark-theme #searchbar .tag {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+#searchbar .tag.suggested {
+  background: transparent;
+  border-style: dotted;
+  border-color: rgba(0, 0, 0, 0.125);
+}
+.dark-theme #searchbar .tag.suggested {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+#searchbar .tag + .tag {
+  margin-left: 0.33em;
+}
+
+#searchbar .tag.selected {
+  opacity: 1;
+}
+
+#searchbar .tag:hover {
+  border-color: transparent;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.dark-theme #searchbar .tag:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#searchbar .tag:focus {
+  border-color: transparent;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.dark-theme #searchbar .tag:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.tag-edit-area .tag-input {
+  -webkit-appearance: none;
+  padding: 0.35em 0.5em;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  border: 1px rgba(0, 0, 0, 0.125) solid;
+  opacity: 0.8;
+}
+.tag-edit-area .tag + .tag-input {
+  margin-left: 0.5em;
+}
+.dark-theme .tag-edit-area .tag-input {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.dark-theme .tag-edit-area .tag-input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+#findinpage-bar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: var(--control-space-top);
+  left: calc(0.5em + var(--control-space-left));
+  right: var(--control-space-right);
+  height: 35px;
+  z-index: 99;
+}
+
+/* leave room for menu button */
+body.windows #findinpage-bar,
+body.linux #findinpage-bar {
+  left: calc(36px + var(--control-space-left));
+}
+
+#findinpage-bar #findinpage-input {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  border: 0;
+  background: inherit;
+  color: inherit;
+  min-width: 80px;
+}
+#findinpage-bar #findinpage-input::-webkit-input-placeholder {
+  opacity: 0.75;
+  color: inherit;
+}
+#findinpage-bar .divider {
+  height: 100%;
+  width: 1em;
+}
+#findinpage-bar .inline-text {
+  font-size: 0.85em;
+  vertical-align: middle;
+}
+#findinpage-bar button {
+  padding: 0 0.25em;
+  margin-top: 2px;
+}
+#findinpage-bar .navbar-action-button {
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+}
+
+#download-bar {
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background: rgb(250, 250, 250);
+  width: 100%;
+  border-top: 1px solid rgb(214, 214, 214);
+  color: black;
+  padding: 0 0.5em;
+  z-index: 9;
+}
+
+body.task-overlay-is-shown #download-bar {
+  z-index: 1;
+}
+
+.dark-mode #download-bar {
+  background: rgb(41, 44, 52);
+  color: white;
+  border-top-color: rgb(80, 80, 80);
+}
+
+#download-bar button:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+.dark-mode #download-bar button:hover {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+#download-container {
+  display: flex;
+  flex: 1;
+  overflow-x: auto;
+  height: 39px;
+}
+
+.download-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.66em 0.75em;
+  height: 100%;
+  width: 30%;
+  min-width: 175px;
+  max-width: 300px;
+  line-height: 39px;
+  overflow: hidden;
+  border-right: 1px rgb(230, 230, 230) solid;
+  position: relative;
+  transition: 0.05s background-color;
+}
+
+.dark-mode .download-item {
+  border-right-color: rgb(80, 80, 80);
+}
+
+.download-item:hover,
+.download-item.completed:active {
+  background-color: rgb(238, 238, 238);
+}
+
+.dark-mode .download-item:hover,
+.dark-mode .download-item.completed:active {
+  background-color: rgb(50, 55, 65);
+}
+
+.download-title {
+  font-size: 0.9em;
+  opacity: 0.9;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.download-info {
+  display: inline-block;
+  margin-top: 0.1em;
+  padding-left: 0.75em;
+  font-size: 0.75em;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.download-item:hover .download-info {
+  display: none;
+}
+
+.download-info.detailed {
+  display: none;
+}
+
+.download-item:hover .download-info.detailed {
+  display: inline-block;
+}
+
+.download-item.loading .download-info,
+.download-item.completed .download-info {
+  /* leave room for the action buttons */
+  padding-right: 32px;
+}
+
+.download-progress {
+  width: calc(100% - 1em);
+  height: 4px;
+  margin-top: 0.33em;
+  background: rgb(22, 122, 224);
+  border-radius: 2px;
+  position: absolute;
+  top: calc(-0.5em + 2px);
+  transform: scaleX(0.56);
+  transform-origin: top left;
+  transition: 1s transform, 0.2s opacity;
+}
+
+.dark-mode .download-progress {
+  background: lightskyblue;
+}
+
+.download-progress[hidden] {
+  display: block !important;
+  opacity: 0;
+}
+
+.download-action-button {
+  position: absolute;
+  right: 0.7em;
+  opacity: 0.7;
+  margin: auto;
+  padding: 0.2em;
+}
+
+#download-close-button {
+  opacity: 0.66;
+  font-size: 1.2em;
+  margin: auto;
+  margin-left: 0.4em;
+  padding: 0.2em;
+  border-radius: 50%;
+}
+
+.dark-mode #download-close-button {
+  opacity: 0.9;
+}
+
+#manager-setup-dialog {
+  max-width: 550px;
+  padding: 1em;
+}
+
+#manager-setup-heading {
+  font-size: 1.6em;
+}
+
+.drag-and-drop-box {
+  height: 200px;
+  width: 100%;
+  border-width: 2px;
+  border-style: dashed;
+  border-color: #2eb9ce;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#manager-setup-dialog .buttons {
+  float: right;
+}
+
+#manager-setup-dialog input[type="button"] {
+  padding: 0.2em;
+}
+
+#password-capture-bar {
+  position: absolute;
+  top: calc(36px + var(--control-space-top));
+  left: 0;
+  padding: 0.5em 1.5em;
+  width: 100%;
+  border-bottom: 1px #ddd solid;
+  line-height: 2em;
+}
+
+.dark-mode #password-capture-bar {
+  background: rgb(41, 44, 52);
+  color: white;
+  border-bottom-color: #777;
+}
+
+#password-capture-description {
+  margin-right: 1.5em;
+}
+
+#password-capture-save {
+  background: royalblue;
+  color: white;
+  padding: 0.33em 2em;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+#password-capture-save:hover {
+  background: rgb(72, 117, 252);
+}
+
+#password-capture-ignore {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.33em 1em;
+  border-radius: 3px;
+  margin-left: 0.75em;
+  margin-right: 2em;
+  font-size: 14px;
+}
+
+#password-capture-ignore:hover {
+  background: rgba(0, 0, 0, 0.075);
+}
+
+.dark-mode #password-capture-ignore {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode #password-capture-ignore:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#password-capture-never-save {
+  padding: 0.33em 1em;
+  font-size: 14px;
+  position: absolute;
+  right: 0.75em;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2em;
+}
+
+@media all and (max-width: 1065px) {
+  #password-capture-never-save {
+    display: none
+  }
+}
+
+#password-capture-username {
+  margin-right: 0.5em;
+}
+
+#password-capture-bar input:invalid {
+  border: 2px rgb(255, 121, 121) solid;
+  border-radius: 3px;
+}
+
+#password-capture-reveal-password {
+  vertical-align: text-bottom;
+  font-size: 1.1em;
+  padding: 0 0.25em;
+  margin-right: 1em;
+}
+
+.password-capture-section {
+  display: inline-block;
+}
+
+#password-viewer-empty {
+  padding: 0.5em 0;
+  opacity: 0.6;
+  text-align: center;
+}
+
+#password-viewer-list {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+#password-viewer-list > div {
+  display: flex;
+  margin: 0.75em 0;
+}
+
+#password-viewer-list > div > * + * {
+  margin-left: 0.5em;
+}
+
+#password-viewer-list > div > button + button {
+  margin-left: 1em;
+}
+
+#password-viewer-list > div > input {
+  flex: 1;
+  min-width: 0;
+}
+
+#password-viewer-list > div > span.description {
+  flex: 1;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+#password-viewer .domain-name {
+  width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gu-mirror{position:fixed!important;margin:0!important;z-index:9999!important;opacity:.8}.gu-hide{display:none!important}.gu-unselectable{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important}.gu-transit{opacity:.2}
